@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Boda - Ana & Luis</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: #f7f4f0;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* INTRO */
+.intro {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+    transition: opacity 1s ease;
+}
+
+.intro.fade {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* HERO */
+.hero {
+    height: 100vh;
+    background: url('https://images.unsplash.com/photo-1519741497674-611481863552') center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+}
+
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3em;
+}
+
+/* SECCIONES */
+.section {
+    padding: 60px 20px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 1.5s forwards;
+}
+
+.section:nth-child(even) {
+    animation-delay: 0.5s;
+}
+
+h2 {
+    font-family: 'Playfair Display', serif;
+}
+
+/* BOTÓN */
+.btn {
+    background: #c5a572;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+/* CONTADOR */
+.countdown {
+    font-size: 1.8em;
+}
+
+/* GALERÍA */
+.gallery img {
+    width: 90%;
+    max-width: 280px;
+    margin: 10px;
+    border-radius: 15px;
+}
+
+/* BOTÓN MÚSICA */
+.music-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #c5a572;
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 50%;
+    font-size: 18px;
+}
+
+/* FOOTER */
+.footer {
+    background: #111;
+    color: white;
+    padding: 20px;
+}
+
+/* ANIMACIONES */
+@keyframes fadeIn {
+    to {opacity: 1;}
+}
+
+@keyframes fadeUp {
+    to {opacity: 1; transform: translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div class="intro" id="intro">
+    <h2 id="guestName">Estás invitado</h2>
+    <button onclick="enter()">Entrar</button>
+</div>
+
+<!-- AUDIO -->
+<audio id="music" loop preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b6f6e.mp3" type="audio/mp3">
+</audio>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>Ana & Luis</h1>
+    <p>10 de Mayo 2026</p>
+</div>
+
+<!-- CONTADOR -->
+<div class="section">
+    <h2>Faltan</h2>
+    <div class="countdown" id="countdown"></div>
+</div>
+
+<!-- UBICACIÓN -->
+<div class="section">
+    <h2>Ubicación</h2>
+    <a class="btn" href="https://share.google/w7CFO1Pi5pWqI0xRJ" target="_blank">
+        Ver mapa
+    </a>
+</div>
+
+<!-- GALERÍA -->
+<div class="section gallery">
+    <h2>Nuestros momentos</h2>
+    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486">
+    <img src="https://images.unsplash.com/photo-1502635385003-ee1e6a1a742d">
+    <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc">
+</div>
+
+<!-- RSVP -->
+<div class="section">
+    <h2>Confirmar asistencia</h2>
+    <a class="btn" href="https://wa.me/5210000000000">Confirmar por WhatsApp</a>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <p>Con amor 💖 Ana & Luis</p>
+</div>
+
+<!-- BOTÓN MÚSICA -->
+<button class="music-btn" onclick="toggleMusic()">🔊</button>
+
+<script>
+// NOMBRE DINÁMICO
+const params = new URLSearchParams(window.location.search);
+const name = params.get("name");
+
+if (name) {
+    document.getElementById("guestName").innerText = "Bienvenido " + name;
+}
+
+// ENTRADA
+function enter() {
+    const intro = document.getElementById("intro");
+    const music = document.getElementById("music");
+
+    intro.classList.add("fade");
+
+    music.play().catch(()=>{});
+
+    if (navigator.vibrate) {
+        navigator.vibrate(200);
+    }
+}
+
+// CONTROL MÚSICA
+function toggleMusic() {
+    const music = document.getElementById("music");
+    if (music.paused) {
+        music.play();
+    } else {
+        music.pause();
+    }
+}
+
+// CONTADOR
+const countdown = document.getElementById("countdown");
+const date = new Date("May 10, 2026 17:00:00").getTime();
+
+setInterval(() => {
+    const now = new Date().getTime();
+    const diff = date - now;
+
+    const d = Math.floor(diff / (1000*60*60*24));
+    const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+    const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+    const s = Math.floor((diff % (1000*60)) / 1000);
+
+    countdown.innerHTML = `${d} días ${h}h ${m}m ${s}s`;
+}, 1000);
+</script>
+
+</body>
+</html>
